@@ -15,8 +15,8 @@ import (
 	"github.com/chzyer/readline"
 	"modernc.org/libc"
 	lib "modernc.org/sqlite/lib"
-	"zombiezen.com/go/sqlite"
-	"zombiezen.com/go/sqlite/sqlitex"
+	"github.com/kwilteam/go-sqlite"
+	"github.com/kwilteam/go-sqlite/sqlitex"
 )
 
 const (

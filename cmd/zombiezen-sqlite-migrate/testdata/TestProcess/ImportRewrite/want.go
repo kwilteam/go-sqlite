@@ -3,7 +3,7 @@
 
 package main
 
-import "zombiezen.com/go/sqlite"
+import "github.com/kwilteam/go-sqlite"
 
 func main() {
 	var db *sqlite.Conn

@@ -28,7 +28,7 @@ import (
 	"testing"
 	"time"
 
-	"zombiezen.com/go/sqlite"
+	"github.com/kwilteam/go-sqlite"
 )
 
 var _ interface {

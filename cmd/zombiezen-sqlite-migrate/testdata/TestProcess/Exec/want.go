@@ -4,9 +4,9 @@
 package main
 
 import (
-	"zombiezen.com/go/sqlite"
-	sqlitefile2 "zombiezen.com/go/sqlite/sqlitefile"
-	"zombiezen.com/go/sqlite/sqlitex"
+	"github.com/kwilteam/go-sqlite"
+	sqlitefile2 "github.com/kwilteam/go-sqlite/sqlitefile"
+	"github.com/kwilteam/go-sqlite/sqlitex"
 )
 
 func main() {

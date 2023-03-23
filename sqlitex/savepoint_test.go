@@ -26,7 +26,7 @@ import (
 	"testing"
 	"time"
 
-	"zombiezen.com/go/sqlite"
+	"github.com/kwilteam/go-sqlite"
 )
 
 func TestSavepointExec(t *testing.T) {

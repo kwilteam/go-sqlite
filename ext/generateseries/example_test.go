@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"log"
 
-	"zombiezen.com/go/sqlite"
-	"zombiezen.com/go/sqlite/ext/generateseries"
-	"zombiezen.com/go/sqlite/sqlitex"
+	"github.com/kwilteam/go-sqlite"
+	"github.com/kwilteam/go-sqlite/ext/generateseries"
+	"github.com/kwilteam/go-sqlite/sqlitex"
 )
 
 func Example() {

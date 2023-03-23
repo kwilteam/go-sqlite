@@ -6,7 +6,7 @@ package sqlitex
 import (
 	"errors"
 
-	"zombiezen.com/go/sqlite"
+	"github.com/kwilteam/go-sqlite"
 )
 
 var errNoResults = errors.New("sqlite: statement has no results")

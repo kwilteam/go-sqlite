@@ -22,7 +22,7 @@ import (
 	"fmt"
 	"sync"
 
-	"zombiezen.com/go/sqlite"
+	"github.com/kwilteam/go-sqlite"
 )
 
 // Pool is a pool of SQLite connections.

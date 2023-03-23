@@ -20,8 +20,8 @@ package sqlitex_test
 import (
 	"testing"
 
-	"zombiezen.com/go/sqlite"
-	"zombiezen.com/go/sqlite/sqlitex"
+	"github.com/kwilteam/go-sqlite"
+	"github.com/kwilteam/go-sqlite/sqlitex"
 )
 
 func TestRandID(t *testing.T) {

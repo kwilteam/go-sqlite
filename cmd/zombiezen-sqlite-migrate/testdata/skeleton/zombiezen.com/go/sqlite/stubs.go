@@ -1,7 +1,7 @@
 // Copyright 2021 Ross Light
 // SPDX-License-Identifier: ISC
 
-// Test stubs for zombiezen.com/go/sqlite.
+// Test stubs for github.com/kwilteam/go-sqlite.
 package sqlite
 
 import (

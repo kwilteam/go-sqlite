@@ -22,7 +22,7 @@ import (
 	"testing"
 
 	"crawshaw.io/iox/ioxtest"
-	"zombiezen.com/go/sqlite"
+	"github.com/kwilteam/go-sqlite"
 )
 
 func TestFileRand(t *testing.T) {

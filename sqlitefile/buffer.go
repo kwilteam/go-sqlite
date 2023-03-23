@@ -21,7 +21,7 @@ import (
 	"errors"
 	"io"
 
-	"zombiezen.com/go/sqlite"
+	"github.com/kwilteam/go-sqlite"
 )
 
 // A Buffer is a variable-sized bytes buffer backed by SQLite blobs.

@@ -89,7 +89,7 @@ const (
 	crawshaw  = "crawshaw.io/sqlite"
 	crawshawX = crawshaw + "/sqlitex"
 
-	zombiezen     = "zombiezen.com/go/sqlite"
+	zombiezen     = "github.com/kwilteam/go-sqlite"
 	zombiezenX    = zombiezen + "/sqlitex"
 	zombiezenFile = zombiezen + "/sqlitefile"
 

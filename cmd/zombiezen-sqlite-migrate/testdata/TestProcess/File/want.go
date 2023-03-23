@@ -4,7 +4,7 @@
 package main
 
 import (
-	"zombiezen.com/go/sqlite/sqlitefile"
+	"github.com/kwilteam/go-sqlite/sqlitefile"
 )
 
 func main() {

@@ -19,8 +19,8 @@ import (
 	"reflect"
 	"testing"
 
-	"zombiezen.com/go/sqlite"
-	"zombiezen.com/go/sqlite/sqlitex"
+	"github.com/kwilteam/go-sqlite"
+	"github.com/kwilteam/go-sqlite/sqlitex"
 )
 
 func initT(t *testing.T, conn *sqlite.Conn) {

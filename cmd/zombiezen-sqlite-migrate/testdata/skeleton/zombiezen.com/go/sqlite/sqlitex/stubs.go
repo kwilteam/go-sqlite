@@ -1,13 +1,13 @@
 // Copyright 2021 Ross Light
 // SPDX-License-Identifier: ISC
 
-// Test stubs for zombiezen.com/go/sqlite/sqlitex.
+// Test stubs for github.com/kwilteam/go-sqlite/sqlitex.
 package sqlitex
 
 import (
 	"os"
 
-	"zombiezen.com/go/sqlite"
+	"github.com/kwilteam/go-sqlite"
 )
 
 type ExecOptions struct {
