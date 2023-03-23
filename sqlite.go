@@ -405,8 +405,8 @@ func (c *Conn) cancelInterrupt() {
 // calls to Prepare will return the same statement.
 //
 // https://www.sqlite.org/c3ref/prepare.html
-func (c *Conn) Prep(query string) *Stmt {
-	stmt, err := c.Prepare(query)
+func (c *Conn) Prep(query string, extraParams ...string) *Stmt {
+	stmt, err := c.Prepare(query, extraParams...)
 	if err != nil {
 		if ErrCode(err) == ResultInterrupt {
 			return &Stmt{
@@ -431,7 +431,7 @@ func (c *Conn) Prep(query string) *Stmt {
 // returns an error.
 //
 // https://www.sqlite.org/c3ref/prepare.html
-func (c *Conn) Prepare(query string) (*Stmt, error) {
+func (c *Conn) Prepare(query string, extraParams ...string) (*Stmt, error) {
 	if c == nil {
 		return nil, fmt.Errorf("sqlite: prepare %q: nil connection", query)
 	}
@@ -444,7 +444,7 @@ func (c *Conn) Prepare(query string) (*Stmt, error) {
 		}
 		return stmt, nil
 	}
-	stmt, trailingBytes, err := c.prepare(query, lib.SQLITE_PREPARE_PERSISTENT)
+	stmt, trailingBytes, err := c.prepare(query, lib.SQLITE_PREPARE_PERSISTENT, extraParams...)
 	if err != nil {
 		return nil, fmt.Errorf("sqlite: prepare %q: %w", query, err)
 	}
@@ -466,7 +466,7 @@ func (c *Conn) Prepare(query string) (*Stmt, error) {
 // the sqlitex package provides an ExecScript function built on this.
 //
 // https://www.sqlite.org/c3ref/prepare.html
-func (c *Conn) PrepareTransient(query string) (stmt *Stmt, trailingBytes int, err error) {
+func (c *Conn) PrepareTransient(query string, extraParams ...string) (stmt *Stmt, trailingBytes int, err error) {
 	if c == nil {
 		return nil, 0, fmt.Errorf("sqlite: prepare %q: nil connection", query)
 	}
@@ -478,7 +478,7 @@ func (c *Conn) PrepareTransient(query string) (stmt *Stmt, trailingBytes int, er
 	// 		}
 	// 	})
 	// }
-	return c.prepare(query, 0)
+	return c.prepare(query, 0, extraParams...)
 }
 
 func (c *Conn) prepare(query string, flags uint32, extraParams ...string) (*Stmt, int, error) {
