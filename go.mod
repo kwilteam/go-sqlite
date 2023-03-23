@@ -1,4 +1,4 @@
-module kwil-sqlite
+module github.com/kwilteam/go-sqlite
 
 go 1.19
 
