@@ -1,4 +1,4 @@
-module zombiezen.com/go/sqlite
+module kwil-sqlite
 
 go 1.19
 
