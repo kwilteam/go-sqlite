@@ -64,6 +64,11 @@ type ExecOptions struct {
 	// If ResultFunc returns an error then iteration ceases
 	// and the execution function returns the error value.
 	ResultFunc func(stmt *sqlite.Stmt) error
+
+	// OverrideFlags is a set of flags to control the behavior of the execution.
+	// If OverrideFlags is zero, then the default behavior is used (which is
+	// ForbidMissing|ForbidExtra).
+	OverrideFlags uint8
 }
 
 // Exec executes an SQLite query.
@@ -121,7 +126,7 @@ func Execute(conn *sqlite.Conn, query string, opts *ExecOptions) error {
 	if err != nil {
 		return annotateErr(err)
 	}
-	err = exec(stmt, forbidMissing|forbidExtra, opts)
+	err = exec(stmt, ForbidMissing|ForbidExtra, opts)
 	resetErr := stmt.Reset()
 	if err == nil {
 		err = resetErr
@@ -150,7 +155,7 @@ func ExecuteFS(conn *sqlite.Conn, fsys fs.FS, filename string, opts *ExecOptions
 	if err != nil {
 		return fmt.Errorf("exec %s: %w", filename, err)
 	}
-	err = exec(stmt, forbidMissing|forbidExtra, opts)
+	err = exec(stmt, ForbidMissing|ForbidExtra, opts)
 	resetErr := stmt.Reset()
 	if err != nil {
 		// Don't strip the error query: we already do this inside exec.
@@ -209,7 +214,7 @@ func ExecuteTransient(conn *sqlite.Conn, query string, opts *ExecOptions) (err e
 	if trailingBytes != 0 {
 		return fmt.Errorf("sqlitex.Exec: query %q has trailing bytes", query)
 	}
-	return exec(stmt, forbidMissing|forbidExtra, opts)
+	return exec(stmt, ForbidMissing|ForbidExtra, opts)
 }
 
 // ExecTransientFS is an alias for ExecuteTransientFS.
@@ -232,7 +237,7 @@ func ExecuteTransientFS(conn *sqlite.Conn, fsys fs.FS, filename string, opts *Ex
 		return fmt.Errorf("exec %s: %w", filename, err)
 	}
 	defer stmt.Finalize()
-	err = exec(stmt, forbidMissing|forbidExtra, opts)
+	err = exec(stmt, ForbidMissing|ForbidExtra, opts)
 	resetErr := stmt.Reset()
 	if err != nil {
 		// Don't strip the error query: we already do this inside exec.
@@ -261,11 +266,16 @@ func PrepareTransientFS(conn *sqlite.Conn, fsys fs.FS, filename string) (*sqlite
 }
 
 const (
-	forbidMissing = 1 << iota
-	forbidExtra
+	ForbidMissing = 1 << iota
+	ForbidExtra
 )
 
 func exec(stmt *sqlite.Stmt, flags uint8, opts *ExecOptions) (err error) {
+	if opts != nil {
+		if opts.OverrideFlags != 0 {
+			flags = opts.OverrideFlags
+		}
+	}
 	paramCount := stmt.BindParamCount()
 	provided := newBitset(paramCount)
 	if opts != nil {
@@ -281,7 +291,7 @@ func exec(stmt *sqlite.Stmt, flags uint8, opts *ExecOptions) (err error) {
 			return err
 		}
 	}
-	if flags&forbidMissing != 0 && !provided.hasAll(paramCount) {
+	if flags&ForbidMissing != 0 && !provided.hasAll(paramCount) {
 		i := provided.firstMissing() + 1
 		name := stmt.BindParamName(i)
 		if name == "" {
@@ -334,7 +344,7 @@ func setNamed(stmt *sqlite.Stmt, provided bitset, flags uint8, args map[string]i
 		return nil
 	}
 	var unused map[string]struct{}
-	if flags&forbidExtra != 0 {
+	if flags&ForbidExtra != 0 {
 		unused = make(map[string]struct{}, len(args))
 		for k := range args {
 			unused[k] = struct{}{}
@@ -347,7 +357,7 @@ func setNamed(stmt *sqlite.Stmt, provided bitset, flags uint8, args map[string]i
 		}
 		arg, present := args[name]
 		if !present {
-			if flags&forbidMissing != 0 {
+			if flags&ForbidMissing != 0 {
 				// TODO(maybe): Check provided as well?
 				return fmt.Errorf("missing parameter %s", name)
 			}
@@ -414,7 +424,7 @@ func ExecuteScript(conn *sqlite.Conn, queries string, opts *ExecOptions) (err er
 		}
 		usedBytes := len(queries) - trailingBytes
 		queries = queries[usedBytes:]
-		err = exec(stmt, forbidMissing, opts)
+		err = exec(stmt, ForbidMissing, opts)
 		stmt.Finalize()
 		if err != nil {
 			return err

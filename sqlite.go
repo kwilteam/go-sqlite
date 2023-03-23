@@ -481,7 +481,7 @@ func (c *Conn) PrepareTransient(query string) (stmt *Stmt, trailingBytes int, er
 	return c.prepare(query, 0)
 }
 
-func (c *Conn) prepare(query string, flags uint32) (*Stmt, int, error) {
+func (c *Conn) prepare(query string, flags uint32, extraParams ...string) (*Stmt, int, error) {
 	if err := c.interrupted(); err != nil {
 		return nil, 0, err
 	}
@@ -519,6 +519,9 @@ func (c *Conn) prepare(query string, flags uint32) (*Stmt, int, error) {
 		if cname != 0 {
 			stmt.bindNames[i] = libc.GoString(cname)
 		}
+	}
+	for _, extraParam := range extraParams {
+		stmt.bindNames = append(stmt.bindNames, extraParam)
 	}
 
 	colCount := int(lib.Xsqlite3_column_count(c.tls, stmt.stmt))
