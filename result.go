@@ -124,7 +124,7 @@ func (code ResultCode) ToPrimary() ResultCode {
 
 // IsSuccess reports whether code indicates success.
 func (code ResultCode) IsSuccess() bool {
-	return code == ResultOK || code == ResultRow || code == ResultDone
+	return code == ResultOK || code == ResultRow || code == ResultDone || code == ResultRange // this is a hack to prevent an error from being thrown for binding non-existent params
 }
 
 // String returns the C constant name of the result code.
