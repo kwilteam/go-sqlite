@@ -1349,3 +1349,26 @@ func (c *Conn) SetDefensive(enabled bool) error {
 	}
 	return nil
 }
+
+// CheckpointWal checkpoints the WAL file associated with the database
+func (c *Conn) CheckpointWal() error {
+	if c == nil {
+		return fmt.Errorf("sqlite: checkpoint wal: nil connection")
+	}
+	if c.AutocommitEnabled() {
+		return fmt.Errorf("sqlite: checkpoint wal: autocommit is enabled")
+	}
+
+	res := ResultCode(lib.Xsqlite3_wal_checkpoint_v2(
+		c.tls,
+		c.conn,
+		c.conn,
+		lib.SQLITE_CHECKPOINT_TRUNCATE,
+		0,
+		0,
+	))
+	if err := res.ToError(); err != nil {
+		return fmt.Errorf("sqlite: checkpoint wal: %w", err)
+	}
+	return nil
+}
