@@ -921,7 +921,7 @@ func (stmt *Stmt) BindZeroBlob(param int, len int64) {
 	stmt.handleBindErr("bind zero blob", res)
 }
 
-func (stmt *Stmt) FindBindName(prefix string, param string) int {
+func (stmt *Stmt) findBindName(prefix string, param string) int {
 	for i, name := range stmt.bindNames {
 		if name == param {
 			return i + 1 // 1-based indices
@@ -933,44 +933,55 @@ func (stmt *Stmt) FindBindName(prefix string, param string) int {
 	return 0
 }
 
+// FindBindName finds the index of a parameter by name.
+func (stmt *Stmt) FindBindName(prefix string, param string) int {
+	for i, name := range stmt.bindNames {
+		if name == param {
+			return i + 1 // 1-based indices
+		}
+	}
+
+	return 0
+}
+
 // SetInt64 binds an int64 to a parameter using a column name.
 func (stmt *Stmt) SetInt64(param string, value int64) {
-	stmt.BindInt64(stmt.FindBindName("SetInt64", param), value)
+	stmt.BindInt64(stmt.findBindName("SetInt64", param), value)
 }
 
 // SetBool binds a value (as a 0 or 1) to a parameter using a column name.
 func (stmt *Stmt) SetBool(param string, value bool) {
-	stmt.BindBool(stmt.FindBindName("SetBool", param), value)
+	stmt.BindBool(stmt.findBindName("SetBool", param), value)
 }
 
 // SetBytes binds bytes to a parameter using a column name.
 // An invalid parameter name will cause the call to Step to return an error.
 func (stmt *Stmt) SetBytes(param string, value []byte) {
-	stmt.BindBytes(stmt.FindBindName("SetBytes", param), value)
+	stmt.BindBytes(stmt.findBindName("SetBytes", param), value)
 }
 
 // SetText binds text to a parameter using a column name.
 // An invalid parameter name will cause the call to Step to return an error.
 func (stmt *Stmt) SetText(param string, value string) {
-	stmt.BindText(stmt.FindBindName("SetText", param), value)
+	stmt.BindText(stmt.findBindName("SetText", param), value)
 }
 
 // SetFloat binds a float64 to a parameter using a column name.
 // An invalid parameter name will cause the call to Step to return an error.
 func (stmt *Stmt) SetFloat(param string, value float64) {
-	stmt.BindFloat(stmt.FindBindName("SetFloat", param), value)
+	stmt.BindFloat(stmt.findBindName("SetFloat", param), value)
 }
 
 // SetNull binds a null to a parameter using a column name.
 // An invalid parameter name will cause the call to Step to return an error.
 func (stmt *Stmt) SetNull(param string) {
-	stmt.BindNull(stmt.FindBindName("SetNull", param))
+	stmt.BindNull(stmt.findBindName("SetNull", param))
 }
 
 // SetZeroBlob binds a zero blob of length len to a parameter using a column name.
 // An invalid parameter name will cause the call to Step to return an error.
 func (stmt *Stmt) SetZeroBlob(param string, len int64) {
-	stmt.BindZeroBlob(stmt.FindBindName("SetZeroBlob", param), len)
+	stmt.BindZeroBlob(stmt.findBindName("SetZeroBlob", param), len)
 }
 
 // ColumnInt returns a query result value as an int.
