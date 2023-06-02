@@ -210,7 +210,7 @@ func (c *Conn) Close() error {
 	for _, stmt := range c.stmts {
 		stmt.Finalize()
 	}
-	res := ResultCode(lib.Xsqlite3_close(c.tls, c.conn))
+	res := ResultCode(lib.Xsqlite3_close_v2(c.tls, c.conn))
 	libc.Xfree(c.tls, c.unlockNote)
 	c.unlockNote = 0
 	c.tls.Close()
