@@ -35,6 +35,9 @@ type Pool struct {
 	all map[*sqlite.Conn]context.CancelFunc
 }
 
+// ExtensionFunc is a function that registers an SQLite extension.
+type ExtensionFunc func(*sqlite.Conn) error
+
 // Open opens a fixed-size pool of SQLite connections.
 // A flags value of 0 defaults to:
 //
@@ -43,7 +46,7 @@ type Pool struct {
 //	SQLITE_OPEN_WAL
 //	SQLITE_OPEN_URI
 //	SQLITE_OPEN_NOMUTEX
-func Open(path string, flags sqlite.OpenFlags, poolSize int) (pool *Pool, err error) {
+func Open(path string, flags sqlite.OpenFlags, poolSize int, extensions ...ExtensionFunc) (pool *Pool, err error) {
 	if path == ":memory:" {
 		return nil, strerror{msg: `sqlite: ":memory:" does not work with multiple connections, use "file::memory:?mode=memory"`}
 	}
@@ -77,6 +80,14 @@ func Open(path string, flags sqlite.OpenFlags, poolSize int) (pool *Pool, err er
 		if err != nil {
 			return nil, err
 		}
+
+		for _, ext := range extensions {
+			if err := ext(conn); err != nil {
+				conn.Close()
+				return nil, err
+			}
+		}
+
 		p.free <- conn
 		p.all[conn] = func() {}
 	}
