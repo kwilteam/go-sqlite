@@ -20,6 +20,5 @@ func Register(c *sqlite.Conn) error {
 }
 
 func errorFunc(ctx sqlite.Context, args []sqlite.Value) (sqlite.Value, error) {
-	panic("test")
 	return sqlite.Value{}, fmt.Errorf("error: %s", args[0].Text())
 }
