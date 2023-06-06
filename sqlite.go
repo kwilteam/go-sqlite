@@ -688,6 +688,14 @@ func (stmt *Stmt) ClearBindings() error {
 //
 //	http://www.sqlite.org/unlock_notify.html
 func (stmt *Stmt) Step() (rowReturned bool, err error) {
+	defer func() {
+		// catch panics and reset the statement
+		if r := recover(); r != nil {
+			stmt.Reset()
+			err = fmt.Errorf("error: %v", r)
+		}
+	}()
+
 	if stmt.bindErr != nil {
 		err = stmt.bindErr
 		stmt.bindErr = nil

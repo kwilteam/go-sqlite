@@ -1,8 +1,6 @@
 package error
 
 import (
-	"fmt"
-
 	"github.com/kwilteam/go-sqlite"
 )
 
@@ -20,8 +18,5 @@ func Register(c *sqlite.Conn) error {
 }
 
 func errorFunc(ctx sqlite.Context, args []sqlite.Value) (sqlite.Value, error) {
-	interruptChan := make(chan struct{})
-	ctx.Conn().SetInterrupt(interruptChan)
-	close(interruptChan)
-	return sqlite.Value{}, fmt.Errorf("error: %s", args[0].Text())
+	panic(args[0].Text())
 }
