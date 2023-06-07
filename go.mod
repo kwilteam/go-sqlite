@@ -20,8 +20,6 @@ require (
 	modernc.org/memory v1.5.0 // indirect
 )
 
-replace modernc.org/sqlite v1.20.5-0.20230220170856-13895386cf24 => github.com/kwilteam/sqlite-engine v0.0.0-20230607212633-2984ed83bdba
-
 retract (
 	v0.9.1 // Contains retractions only.
 	v0.9.0 // Had libc memgrind issues.
